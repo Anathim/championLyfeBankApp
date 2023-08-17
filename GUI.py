@@ -31,6 +31,7 @@ def finish_register():
     surname = temp_surname.get()
     mobile = temp_mobile.get()
     password = temp_password.get()
+    reg_deposit = temp_deposit.get()
     all_accounts = os.listdir()
 
     if name == "" or surname == "" or mobile == "":
@@ -47,7 +48,8 @@ def finish_register():
             new_file.write(surname + '\n')
             new_file.write(mobile + '\n')
             new_file.write(password + '\n')
-            new_file.write('0')
+            new_file.write(reg_deposit)
+            new_file.write('\nDeposit: R' + reg_deposit)
             new_file.close()
             notif.config(fg="green", text="Account has been created")
 
@@ -86,7 +88,7 @@ def register():
     Entry(register_screen, textvariable=temp_name).grid(row=1, column=0)
     Entry(register_screen, textvariable=temp_surname).grid(row=2, column=0)
     Entry(register_screen, textvariable=temp_mobile).grid(row=3, column=0)
-    Entry(register_screen, textvariable=temp_password, show="*").grid(row=4, column=0)
+    Entry(register_screen, textvariable=temp_password).grid(row=4, column=0)
     Entry(register_screen, textvariable=temp_deposit).grid(row=6, column=0)
 
     # Buttons
@@ -187,8 +189,8 @@ def finish_deposit():
 
     file = open(login_name, 'r+')
     file_data = file.read()
-    details = file_data.split('\n')
-    current_balance = details[4]
+    user_details = file_data.split('\n')
+    current_balance = user_details[4]
     updated_balance = current_balance
     updated_balance = float(updated_balance) + float(amount.get())
     file_data = file_data.replace(current_balance, str(updated_balance))
@@ -221,7 +223,7 @@ def withdraw():
     withdraw_screen.title('Withdraw')
 
     # Label
-    Label(withdraw_screen, text="Deposit", font=('Arial', 12)).grid(row=0, sticky=N, pady=10)
+    Label(withdraw_screen, text="Withdraw", font=('Arial', 12)).grid(row=0, sticky=N, pady=10)
     current_balance_label = Label(withdraw_screen, text="Current Balance: R" + details_balance, font=('Arial', 12))
     current_balance_label.grid(row=1, sticky=W)
     Label(withdraw_screen, text="Amount", font=('Arial', 12)).grid(row=2, sticky=W)
@@ -233,73 +235,6 @@ def withdraw():
 
     # Button
     Button(withdraw_screen, text="Withdraw", font=('Arial', 12), command=finish_withdraw).grid(row=3, sticky=W, pady=5)
-
-
-def view_balance():
-    file = open(login_name, 'r')
-    file_data = file.read()
-    user_details = file_data.split('\n')
-    balance = user_details[4]
-    file.close()
-
-    balance_screen = Toplevel(master)
-    balance_screen.title('Balance')
-    Label(balance_screen, text="Your current balance is: R" + balance, font=('Arial', 12)).pack()
-
-
-# def view_statement():
-#    file_name = login_name
-#
-#    file = open(login_name, 'r')
-#    file_data = file.read()
-#    details = file_data.split('\n')
-
-# Statement Screen
-#    statement_screen = Toplevel(master)
-#    statement_screen.title('Statement')
-
-# if len(details) > 5: transactions = details[5:]  # Get the transaction history transactions = [transaction for
-# transaction in transactions if transaction.strip()]  # Remove empty transactions for transaction in transactions:
-# if transaction.startswith("Deposit"): Label(statement_screen, text='Credited Amount: R' + transaction,
-# font=('Arial', 12)).grid(row=1, sticky=W) print("Credited Amount: " + transaction) elif transaction.startswith(
-# "Withdraw"): Label(statement_screen, text='Debited Amount: R' + transaction, font=('Arial', 12)).grid(row=2,
-# sticky=W) print("Debited Amount: " + transaction) elif transaction.startswith("Balance"): Label(statement_screen,
-# text='Updated Balance: R' + transaction, font=('Arial', 12)).grid(row=3, sticky=W) print("Updated Balance: " +
-# transaction) else: Label(statement_screen, text='No transaction history available.' + transaction, font=('Arial',
-# 12)).grid(row=4, sticky=W) print("No transaction history available.") file.close() os.system(file_name)
-
-def view_statement():
-    file_name = login_name
-
-    with open(file_name, 'r') as file:  # Use with statement to close file automatically
-        file_data = file.read()
-        details = file_data.splitlines()  # Use splitlines() to avoid empty lines
-
-    # Statement Screen
-    statement_screen = Toplevel(master)
-    statement_screen.title('Statement')
-
-    if len(details) > 5:
-        transactions = details[5:]  # Get the transaction history
-        transactions = [transaction for transaction in transactions if transaction.strip()]  # Remove empty transactions
-    else:
-        transactions = []  # No transactions available
-
-    if transactions:  # Check if transactions list is not empty
-        for transaction in transactions:
-            if transaction.startswith("Deposit"):
-                Label(statement_screen, text='Credited Amount: ' + transaction.split()[1],
-                      font=('Arial', 12)).pack()  # Use pack() and split() to display amount
-            elif transaction.startswith("Withdraw"):
-                Label(statement_screen, text='Debited Amount: ' + transaction.split()[1],
-                      font=('Arial', 12)).pack()
-            elif transaction.startswith("Balance"):
-                Label(statement_screen, text='Updated Balance: ' + transaction.split()[1],
-                      font=('Arial', 12)).pack()
-    else:
-        Label(statement_screen, text='No transaction history available.',
-              font=('Arial', 12)).pack()
-    os.system(file_name)
 
 
 def finish_withdraw():
@@ -330,6 +265,48 @@ def finish_withdraw():
 
     current_balance_label.config(text="Current Balance: R" + str(updated_balance), fg="green")
     withdraw_notif.config(text='Balance Updated', fg='green')
+
+
+def view_balance():
+    file = open(login_name, 'r')
+    file_data = file.read()
+    user_details = file_data.split('\n')
+    balance = user_details[4]
+    file.close()
+
+    balance_screen = Toplevel(master)
+    balance_screen.title('Balance')
+    Label(balance_screen, text="Your current balance is: R" + balance, font=('Arial', 12)).pack()
+
+def view_statement():
+    file_name = login_name
+
+    with open(file_name, 'r') as file:  # Use with statement to close file automatically
+        file_data = file.read()
+        details = file_data.splitlines()  # Use splitlines() to avoid empty lines
+
+    # Statement Screen
+    statement_screen = Toplevel(master)
+    statement_screen.title('Statement')
+
+    if len(details) > 5:
+        transactions = details[5:]  # Get the transaction history
+        transactions = [transaction for transaction in transactions if transaction.strip()]  # Remove empty transactions
+    else:
+        transactions = []  # No transactions available
+
+    if transactions:  # Check if transactions list is not empty
+        for transaction in transactions:
+            if transaction.startswith("Deposit"):
+                Label(statement_screen, text='Credited Amount: ' + transaction.split()[1],
+                      font=('Arial', 12)).pack()  # Use pack() and split() to display amount
+            elif transaction.startswith("Withdraw"):
+                Label(statement_screen, text='Debited Amount: ' + transaction.split()[1],
+                      font=('Arial', 12)).pack()
+    else:
+        Label(statement_screen, text='No transaction history available.',
+              font=('Arial', 12)).pack()
+    os.system(file_name)
 
 
 def personal_details():
