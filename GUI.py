@@ -7,6 +7,7 @@ from tkinter import *
 # Main Screen
 master = Tk()
 master.title('Champion Lyfe Banking App')
+master.geometry('320x200')
 
 
 # Functions
@@ -73,29 +74,30 @@ def register():
     register_screen.title('Register')
 
     # Labels
-    Label(register_screen, text="Please enter your details below to register", font=('Arial', 12)).grid(row=0,
+    Label(register_screen, text="Register", font=('Arial', 15)).grid(row=0, sticky=N, pady=10)
+    Label(register_screen, text="Please enter your details below to register", font=('Arial', 12)).grid(row=1,
                                                                                                         sticky=N,
                                                                                                         pady=10)
-    Label(register_screen, text="Name", font=('Arial', 12)).grid(row=1, sticky=W)
-    Label(register_screen, text="Surname", font=('Arial', 12)).grid(row=2, sticky=W)
-    Label(register_screen, text="Mobile", font=('Arial', 12)).grid(row=3, sticky=W)
-    Label(register_screen, text="Password", font=('Arial', 12)).grid(row=4, sticky=W)
-    Label(register_screen, text="Deposit", font=('Arial', 12)).grid(row=6, sticky=W)
+    Label(register_screen, text="Name", font=('Arial', 12)).grid(row=2, sticky=W)
+    Label(register_screen, text="Surname", font=('Arial', 12)).grid(row=3, sticky=W)
+    Label(register_screen, text="Mobile", font=('Arial', 12)).grid(row=4, sticky=W)
+    Label(register_screen, text="Password", font=('Arial', 12)).grid(row=5, sticky=W)
+    Label(register_screen, text="Deposit", font=('Arial', 12)).grid(row=7, sticky=W)
     notif = Label(register_screen, font=('Arial', 12))
-    notif.grid(row=7, sticky=N, pady=10)
+    notif.grid(row=8, sticky=N, pady=10)
 
     # Entries
-    Entry(register_screen, textvariable=temp_name).grid(row=1, column=0)
-    Entry(register_screen, textvariable=temp_surname).grid(row=2, column=0)
-    Entry(register_screen, textvariable=temp_mobile).grid(row=3, column=0)
-    Entry(register_screen, textvariable=temp_password).grid(row=4, column=0)
-    Entry(register_screen, textvariable=temp_deposit).grid(row=6, column=0)
+    Entry(register_screen, textvariable=temp_name).grid(row=2, column=0)
+    Entry(register_screen, textvariable=temp_surname).grid(row=3, column=0)
+    Entry(register_screen, textvariable=temp_mobile).grid(row=4, column=0)
+    Entry(register_screen, textvariable=temp_password).grid(row=5, column=0)
+    Entry(register_screen, textvariable=temp_deposit).grid(row=7, column=0)
 
     # Buttons
-    Button(register_screen, text="Generate Password", command=generate_password, font=('Arial', 12)).grid(row=5,
+    Button(register_screen, text="Generate Password", command=generate_password, font=('Arial', 12)).grid(row=6,
                                                                                                           sticky=N,
                                                                                                           pady=10)
-    Button(register_screen, text="Register", command=finish_register, font=('Arial', 12)).grid(row=8,
+    Button(register_screen, text="Register", command=finish_register, font=('Arial', 12)).grid(row=9,
                                                                                                sticky=N,
                                                                                                pady=10)
 
@@ -120,8 +122,8 @@ def login_session():
                 account_dashboard.title('Dashboard')
 
                 # Labels
-                Label(account_dashboard, text="Account Dashboard", font=('Arial', 12)).grid(row=0, sticky=N, pady=10)
-                Label(account_dashboard, text="Welcome " + name, font=('Arial', 12)).grid(row=1, sticky=N, pady=5)
+                Label(account_dashboard, text="Account Dashboard", font=('Arial', 15)).grid(row=0, sticky=N, pady=10)
+                Label(account_dashboard, text="Welcome " + name, font=('Arial', 14)).grid(row=1, sticky=N, pady=5)
 
                 # Buttons
                 Button(account_dashboard, text="Personal Details", font=('Arial', 12), width=30,
@@ -147,6 +149,62 @@ def login_session():
     login_notif.config(fg="red", text="No account found !!")
 
 
+def login():
+    # Vars
+    global temp_login_name
+    global temp_login_password
+    global login_notif
+    global login_screen
+    temp_login_name = StringVar()
+    temp_login_password = StringVar()
+
+    # Login Screen
+    login_screen = Toplevel(master)
+    login_screen.title('Login')
+
+    # Labels
+    Label(login_screen, text="Login", font=('Arial', 15)).grid(row=0, sticky=N, pady=10)
+    Label(login_screen, text="Please enter your details below to login", font=('Arial', 12)).grid(row=1, sticky=N,
+                                                                                                  pady=10)
+    Label(login_screen, text="Name", font=('Arial', 12)).grid(row=2, sticky=W)
+    Label(login_screen, text="Password", font=('Arial', 12)).grid(row=3, sticky=W)
+    login_notif = Label(login_screen, font=('Arial', 12))
+    login_notif.grid(row=5, sticky=N)
+
+    # Entry
+    Entry(login_screen, textvariable=temp_login_name).grid(row=2, column=0)
+    Entry(login_screen, textvariable=temp_login_password, show="*").grid(row=3, column=0)
+
+    # Button
+    Button(login_screen, text="Login", command=login_session, width=15, font=('Arial', 12)).grid(row=4,
+                                                                                                 sticky=N, pady=10)
+
+
+def personal_details():
+    # Vars
+    file = open(login_name, 'r')
+    file_data = file.read()
+    user_details = file_data.split('\n')
+    details_name = user_details[0]
+    details_surname = user_details[1]
+    details_mobile = user_details[2]
+    details_password = user_details[3]
+    details_balance = user_details[4]
+
+    # Personal details screen
+    personal_details_screen = Toplevel(master)
+    personal_details_screen.title('Personal Details')
+    personal_details_screen.geometry('270x200')
+
+    # Labels
+    Label(personal_details_screen, text="Personal Details", font=('Arial', 15)).grid(row=0, sticky=N, pady=10, padx=55)
+    Label(personal_details_screen, text="Name: " + details_name, font=('Arial', 12)).grid(row=1, sticky=N)
+    Label(personal_details_screen, text="Surname: " + details_surname, font=('Arial', 12)).grid(row=2, sticky=N)
+    Label(personal_details_screen, text="Mobile: " + details_mobile, font=('Arial', 12)).grid(row=3, sticky=N)
+    Label(personal_details_screen, text="Password: " + details_password, font=('Arial', 12)).grid(row=4, sticky=N)
+    Label(personal_details_screen, text="Balance: R" + details_balance, font=('Arial', 12)).grid(row=5, sticky=N)
+
+
 def deposit():
     # Vars
     global amount
@@ -163,9 +221,10 @@ def deposit():
     # Deposit Screen
     deposit_screen = Toplevel(master)
     deposit_screen.title('Deposit')
+    deposit_screen.geometry('250x200')
 
     # Label
-    Label(deposit_screen, text="Deposit", font=('Arial', 12)).grid(row=0, sticky=N, pady=10)
+    Label(deposit_screen, text="Deposit", font=('Arial', 15)).grid(row=0, sticky=N, pady=10)
     current_balance_label = Label(deposit_screen, text="Current Balance: R" + details_balance, font=('Arial', 12))
     current_balance_label.grid(row=1, sticky=W)
     Label(deposit_screen, text="Amount", font=('Arial', 12)).grid(row=2, sticky=W)
@@ -176,7 +235,7 @@ def deposit():
     Entry(deposit_screen, textvariable=amount).grid(row=2, column=1)
 
     # Button
-    Button(deposit_screen, text="Deposit", font=('Arial', 12), command=finish_deposit).grid(row=3, sticky=W, pady=5)
+    Button(deposit_screen, text="Deposit", font=('Arial', 12), command=finish_deposit).grid(row=3, sticky=N, pady=5)
 
 
 def finish_deposit():
@@ -221,9 +280,10 @@ def withdraw():
     # Deposit Screen
     withdraw_screen = Toplevel(master)
     withdraw_screen.title('Withdraw')
+    withdraw_screen.geometry('250x200')
 
     # Label
-    Label(withdraw_screen, text="Withdraw", font=('Arial', 12)).grid(row=0, sticky=N, pady=10)
+    Label(withdraw_screen, text="Withdraw", font=('Arial', 15)).grid(row=0, sticky=N, pady=10)
     current_balance_label = Label(withdraw_screen, text="Current Balance: R" + details_balance, font=('Arial', 12))
     current_balance_label.grid(row=1, sticky=W)
     Label(withdraw_screen, text="Amount", font=('Arial', 12)).grid(row=2, sticky=W)
@@ -234,7 +294,7 @@ def withdraw():
     Entry(withdraw_screen, textvariable=withdraw_amount).grid(row=2, column=1)
 
     # Button
-    Button(withdraw_screen, text="Withdraw", font=('Arial', 12), command=finish_withdraw).grid(row=3, sticky=W, pady=5)
+    Button(withdraw_screen, text="Withdraw", font=('Arial', 12), command=finish_withdraw).grid(row=3, sticky=N, pady=5)
 
 
 def finish_withdraw():
@@ -276,7 +336,12 @@ def view_balance():
 
     balance_screen = Toplevel(master)
     balance_screen.title('Balance')
-    Label(balance_screen, text="Your current balance is: R" + balance, font=('Arial', 12)).pack()
+    balance_screen.geometry('220x100')
+
+    # Labels
+    Label(balance_screen, text="Balance", font=('Arial', 15)).grid(row=0, sticky=N, pady=10)
+    Label(balance_screen, text="Current Balance: R" + balance, font=('Arial', 12)).grid(row=1, sticky=W)
+
 
 def view_statement():
     file_name = login_name
@@ -288,6 +353,10 @@ def view_statement():
     # Statement Screen
     statement_screen = Toplevel(master)
     statement_screen.title('Statement')
+    statement_screen.geometry('250x300')
+
+    # Label
+    Label(statement_screen, text="Statement", font=('Arial', 15)).pack()
 
     if len(details) > 5:
         transactions = details[5:]  # Get the transaction history
@@ -309,63 +378,9 @@ def view_statement():
     os.system(file_name)
 
 
-def personal_details():
-    # Vars
-    file = open(login_name, 'r')
-    file_data = file.read()
-    user_details = file_data.split('\n')
-    details_name = user_details[0]
-    details_surname = user_details[1]
-    details_mobile = user_details[2]
-    details_password = user_details[3]
-    details_balance = user_details[4]
-
-    # Personal details screen
-    personal_details_screen = Toplevel(master)
-    personal_details_screen.title('Personal Details')
-
-    # Labels
-    Label(personal_details_screen, text="Personal Details", font=('Arial', 12)).grid(row=0, sticky=N, pady=10)
-    Label(personal_details_screen, text="Name: " + details_name, font=('Arial', 12)).grid(row=1, sticky=W)
-    Label(personal_details_screen, text="Surname: " + details_surname, font=('Arial', 12)).grid(row=2, sticky=W)
-    Label(personal_details_screen, text="Mobile: " + details_mobile, font=('Arial', 12)).grid(row=3, sticky=W)
-    Label(personal_details_screen, text="Password: " + details_password, font=('Arial', 12)).grid(row=4, sticky=W)
-    Label(personal_details_screen, text="Balance: R" + details_balance, font=('Arial', 12)).grid(row=5, sticky=W)
-
-
-def login():
-    # Vars
-    global temp_login_name
-    global temp_login_password
-    global login_notif
-    global login_screen
-    temp_login_name = StringVar()
-    temp_login_password = StringVar()
-
-    # Login Screen
-    login_screen = Toplevel(master)
-    login_screen.title('Login')
-
-    # Labels
-    Label(login_screen, text="Login to your account", font=('Arial', 12)).grid(row=0, sticky=N, pady=10)
-    Label(login_screen, text="Name", font=('Arial', 12)).grid(row=1, sticky=W)
-    Label(login_screen, text="Password", font=('Arial', 12)).grid(row=2, sticky=W)
-    login_notif = Label(login_screen, font=('Arial', 12))
-    login_notif.grid(row=4, sticky=N)
-
-    # Entry
-    Entry(login_screen, textvariable=temp_login_name).grid(row=1, column=1, padx=5)
-    Entry(login_screen, textvariable=temp_login_password, show="*").grid(row=2, column=1, padx=5)
-
-    # Button
-    Button(login_screen, text="Login", command=login_session, width=15, font=('Arial', 12)).grid(row=3, column=1,
-                                                                                                 sticky=W, pady=5,
-                                                                                                 padx=5)
-
-
 # Labels
-Label(master, text="Champion Lyfe Banking App", font=('Arial', 14)).grid(row=0, sticky=N, pady=10)
-Label(master, text="Bank Better With Us!", font=('Arial', 13)).grid(row=1, sticky=N)
+Label(master, text="Champion Lyfe Banking App", font=('Arial', 15)).grid(row=0, sticky=N, pady=10, padx=25)
+Label(master, text="Bank Better With Us!", font=('Arial', 13)).grid(row=1, sticky=N, pady=10)
 
 # Buttons
 Button(master, text="Register", font=('Arial', 12), width=20, command=register).grid(row=3, sticky=N)
